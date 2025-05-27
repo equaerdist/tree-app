@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using tree_api.API.Middlewares;
 using tree_api.Configuration;
 using tree_api.Database;
 
@@ -26,6 +27,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseMiddleware<ExceptionLoggingMiddleware>();
 app.UseAuthorization();
 
 app.MapControllers();

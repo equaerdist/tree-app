@@ -7,8 +7,7 @@ public class LogEntry
     [Key]
     public long Id { get; set; }
 
-    [Required]
-    public long EventId { get; set; }
+    public string? EventId { get; set; }
 
     [Required]
     public DateTimeOffset CreatedAt { get; set; }
