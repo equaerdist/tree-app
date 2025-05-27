@@ -1,0 +1,71 @@
+## Build results
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+*.log
+
+## User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+.vscode/
+.vs/
+*.userprefs
+
+## OS generated files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+desktop.ini
+
+## Rider files
+.idea/
+
+## DotCover
+*.dotCover
+
+## NUnit
+*.VisualState.xml
+TestResult.xml
+nunit-*.xml
+
+## Visual Studio profiler
+*.psess
+*.vsp
+*.vspx
+*.sap
+
+## Resharper
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user
+
+## Coverage tools
+*.coverage
+*.coveragexml
+
+## Packages
+*.nupkg
+*.snupkg
+*.symbols.nupkg
+packages/
+# Do not ignore build/*.targets for NuGet (keep your .targets in repo if needed)
+
+## EF Core Migrations snapshots
+**/Migrations/*Snapshot.cs
+
+## Other project files
+*.dbmdl
+*.bak
+*.mdf
+*.ldf
+*.sqlite
+*.sqlite3
+
+## Logs
+*.log
+
+## Secrets
+secrets.json
+appsettings.*.local.json
