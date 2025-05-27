@@ -20,19 +20,27 @@ internal sealed class ExceptionHandler : IExceptionHandler
         string? requestId = null,
         string? queryParams = null)
     {
-        var logEntry = new LogEntry
+        try
         {
-            EventId = requestId,
-            CreatedAt = DateTimeOffset.UtcNow,
-            StackTrace = exception.ToString(),
-            QueryParameters = queryParams,
-            BodyParameters = request
-        };
+            var logEntry = new LogEntry
+            {
+                EventId = requestId,
+                CreatedAt = DateTimeOffset.UtcNow,
+                StackTrace = exception.ToString(),
+                QueryParameters = queryParams,
+                BodyParameters = request
+            };
 
-        _dbContext.LogJournal.Add(logEntry);
-        await _dbContext.SaveChangesAsync();
+            _dbContext.LogJournal.Add(logEntry);
+            await _dbContext.SaveChangesAsync();
 
-        return logEntry.Id;
+            return logEntry.Id;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error during logging request exception...");
+            return default;
+        }
     }
 }
 

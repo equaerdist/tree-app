@@ -10,6 +10,14 @@
       "dotnetRunMessages": true,
       "applicationUrl": "http://localhost:5256"
     },
+    "migrate": {
+      "commandName": "Project",
+      "launchBrowser": false,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "dotnetRunMessages": true
+    },
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
