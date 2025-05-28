@@ -13,7 +13,7 @@ internal class Node
     public string Name { get; set; } = string.Empty;
 
     [ForeignKey(nameof(Tree))]
-    public Guid TreeId { get; set; }
+    public long TreeId { get; set; }
     public Tree? Tree { get; set; }
 
     public long? ParentId { get; set; }

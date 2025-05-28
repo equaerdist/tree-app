@@ -5,7 +5,7 @@ namespace tree_api.Database.Models;
 internal class Tree
 {
     [Key]
-    public Guid Id { get; set; } = Guid.NewGuid();
+    public long Id { get; set; }
 
     [Required]
     [MaxLength(100)]
