@@ -15,11 +15,17 @@ internal class NodeService : INodeService
         _ctx = ctx;
     }
 
-    public async Task Create(string treeName, long parentNodeId, string nodeName, CancellationToken token)
+    public async Task<long> Create(string treeName, long parentNodeId, string nodeName, CancellationToken token)
     {
         var parent = await _ctx.Nodes.FirstOrDefaultAsync(n => n.Id == parentNodeId && n.Tree!.Name == treeName);
+        Tree? treeParent = null;
 
         if (parent == null)
+        {
+            treeParent = await _ctx.Trees.FirstOrDefaultAsync(n => n.Id == parentNodeId && n.Name == treeName);
+        }
+
+        if (parent == null && treeParent == null)
         {
             throw new SecureException("Parent node does not exist in specified tree.");
         }
@@ -27,8 +33,8 @@ internal class NodeService : INodeService
         var newNode = new Node
         {
             Name = nodeName,
-            TreeId = parent.TreeId,
-            ParentId = parentNodeId
+            TreeId = parent?.TreeId ?? treeParent?.Id ?? throw new ArgumentException(),
+            ParentId = parent?.Id
         };
 
         _ctx.Nodes.Add(newNode);
@@ -42,6 +48,8 @@ internal class NodeService : INodeService
         {
             throw new SecureException($"Node with the same name already exists among siblings.");
         }
+
+        return newNode.Id;
     }
 
     public async Task Delete(string treeName, long nodeId, CancellationToken token)

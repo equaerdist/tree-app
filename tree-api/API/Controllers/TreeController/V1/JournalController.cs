@@ -43,7 +43,7 @@ public class JournalController : ControllerBase
             {
                 Id = x.Id,
                 EventId = long.TryParse(x.EventId, out var eid) ? eid : 0,
-                CreatedAt = x.CreatedAt.DateTime
+                CreatedAt = x.CreatedAt
             })
         });
     }

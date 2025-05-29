@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using tree_api.API.Contracts.V1;
 using tree_api.Domain.Services.NodeService;
 
 namespace tree_api.API.Controllers.TreeController.V1;
@@ -19,15 +20,18 @@ public class TreeNodeController : ControllerBase
     /// A new node name must be unique across all siblings.
     /// </summary>
     [HttpPost("create")]
-    public async Task<IActionResult> CreateNode(
+    public async Task<ActionResult<CreateNodeResponse>> CreateNode(
         [FromQuery] string treeName,
         [FromQuery] long parentNodeId,
         [FromQuery] string nodeName,
         CancellationToken token)
     {
-        await _service.Create(treeName, parentNodeId, nodeName, token);
+        var result = await _service.Create(treeName, parentNodeId, nodeName, token);
 
-        return Ok();
+        return Ok(new CreateNodeResponse()
+        {
+            Id = result
+        });
     }
 
     /// <summary>

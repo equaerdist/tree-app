@@ -15,6 +15,8 @@ internal sealed class MigrationsChecker
 
     public async Task CheckAndRunMigrations(CancellationToken token)
     {
+        await _ctx.Database.EnsureCreatedAsync();
+
         if (!(await _ctx.Database.GetPendingMigrationsAsync(token)).Any())
         {
             _logger.LogInformation("No pending migrations.");
