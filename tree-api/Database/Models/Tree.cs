@@ -2,7 +2,7 @@
 
 namespace tree_api.Database.Models;
 
-internal class Tree
+public class Tree
 {
     [Key]
     public long Id { get; set; }

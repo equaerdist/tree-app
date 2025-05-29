@@ -2,7 +2,7 @@
 
 namespace tree_api.Domain.Services.TreeService;
 
-internal interface ITreeService
+public interface ITreeService
 {
     Task<Tree> GetOrCreateTreeAsync(string treeName);
 }

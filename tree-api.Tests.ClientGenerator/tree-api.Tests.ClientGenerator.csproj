@@ -1,0 +1,32 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>tree_api.Tests.ClientGenerator</RootNamespace>
+  </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" />
+		<PackageReference Include="NSwag.CodeGeneration.CSharp" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\tree-api\tree-api.csproj" />
+    </ItemGroup>
+
+	<ItemGroup>
+		<None Include="..\tree-api\appsettings.json">
+			<Link>appsettings.json</Link>
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Include="..\tree-api\appsettings.Local.json">
+			<Link>appsettings.Local.json</Link>
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Client\" />
+	</ItemGroup>
+	
+</Project>

@@ -12,7 +12,7 @@ public class TreeController : ControllerBase
 {
     private readonly ITreeService _treeService;
 
-    internal TreeController(ITreeService treeService)
+    public TreeController(ITreeService treeService)
     {
         _treeService = treeService;
     }

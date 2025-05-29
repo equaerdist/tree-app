@@ -9,7 +9,7 @@ public class TreeNodeController : ControllerBase
 {
     private readonly INodeService _service;
 
-    internal TreeNodeController(INodeService service)
+    public TreeNodeController(INodeService service)
     {
         _service = service;
     }

@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace tree_api.Database.Models;
 
-internal class Node
+public class Node
 {
     [Key]
     public long Id { get; set; }

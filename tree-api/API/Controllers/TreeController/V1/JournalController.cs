@@ -11,7 +11,7 @@ public class JournalController : ControllerBase
 {
     private readonly IJournalService _service;
 
-    internal JournalController(IJournalService service)
+    public JournalController(IJournalService service)
     {
         _service = service;
     }

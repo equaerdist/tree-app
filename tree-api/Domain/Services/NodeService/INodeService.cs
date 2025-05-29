@@ -1,6 +1,6 @@
 ﻿namespace tree_api.Domain.Services.NodeService;
 
-internal interface INodeService
+public interface INodeService
 {
     Task Create(string treeName, long parentNodeId, string nodeName, CancellationToken token);
     Task Delete(string treeName, long nodeId, CancellationToken token);
