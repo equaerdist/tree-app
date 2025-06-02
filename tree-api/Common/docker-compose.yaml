@@ -5,24 +5,24 @@ services:
     build: .
     container_name: tree-api-app
     ports:
-      - 8080:8080
+      - "8080:8080"
     environment:
-      - ASPNETCORE_ENVIRONMENT=Testing
+      - ASPNETCORE_ENVIRONMENT=Development
     depends_on:
       - postgres
     networks:
       - app-network
 
   postgres:
-    image: postgres:latest
+    image: postgres:15
     container_name: tree-api-db
     restart: always
+    ports:
+    - "6543:5432"
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: tree_db
-    ports:
-      - 6543:5432
     volumes:
       - postgres-data:/var/lib/postgresql/data
     networks:

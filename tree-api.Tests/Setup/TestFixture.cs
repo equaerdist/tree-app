@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.TestHost;
+﻿using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -37,9 +36,11 @@ public class TestFixture
 
     public static TestServer CreateServer(Action<IServiceCollection>? configureServices = null)
     {
+#if DEBUG
+        Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "Local");
+#endif
         var factory = new CustomWebApplicationFactory().WithWebHostBuilder(builder =>
         {
-            builder.UseEnvironment("Local");
             builder.ConfigureServices(options =>
             {
                 configureServices?.Invoke(options);

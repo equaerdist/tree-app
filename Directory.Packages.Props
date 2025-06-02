@@ -8,6 +8,9 @@
     <PackageVersion Include="Microsoft.AspNetCore.Mvc.Testing" Version="8.0.0" />
     <PackageVersion Include="Bogus" Version="35.6.3" />
     <PackageVersion Include="FluentAssertions" Version="7.2.0" />
+    <PackageVersion Include="SpecFlow" Version="3.9.74" />
+    <PackageVersion Include="SpecFlow.xUnit" Version="3.9.74" />
+    <PackageVersion Include="SpecFlow.Tools.MsBuild.Generation" Version="3.9.74" />
     
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.16" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="8.0.16" />
