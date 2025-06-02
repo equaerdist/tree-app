@@ -13,7 +13,7 @@ internal class TreeService : ITreeService
         _ctx = ctx;
     }
 
-    public async Task<Tree> GetOrCreateTreeAsync(string treeName)
+    public async Task<Tree> GetOrCreateTreeAsync(string treeName, CancellationToken token)
     {
         var tree = await _ctx.Trees
             .Include(t => t.Nodes)
@@ -23,7 +23,7 @@ internal class TreeService : ITreeService
         {
             tree = new Tree { Name = treeName };
             _ctx.Trees.Add(tree);
-            await _ctx.SaveChangesAsync();
+            await _ctx.SaveChangesAsync(token);
         }
 
         return tree;

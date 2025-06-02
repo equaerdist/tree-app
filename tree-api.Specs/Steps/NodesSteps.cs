@@ -2,6 +2,7 @@ using Microsoft.Extensions.DependencyInjection;
 using TechTalk.SpecFlow;
 using tree_api.Domain.Repositories;
 using tree_api.Domain.Services.NodeService;
+using tree_api.Domain.Services.TreeService;
 using tree_api.Specs.Contexts;
 using Xunit;
 
@@ -23,9 +24,8 @@ internal class NodesSteps
     [Given(@"существует дерево с именем ""(.*)""")]
     public async Task ƒопустим—уществуетƒерево—»менем(string treeName)
     {
-        var rootNodeId = await NodeService.Create(treeName, 0, "root", CancellationToken.None);
-        _treeRoots[treeName] = rootNodeId;
-        _nodeIds[(treeName, "root")] = rootNodeId;
+        var rootNodeId = await TreeService.GetOrCreateTreeAsync(treeName, CancellationToken.None);
+        _treeRoots[treeName] = rootNodeId.Id;
     }
 
     [Given(@"существует узел с именем ""(.*)"" в дереве ""(.*)""")]
@@ -66,7 +66,6 @@ internal class NodesSteps
         var key = (treeName, nodeName);
         Assert.True(_nodeIds.ContainsKey(key), $"”зел '{nodeName}' не найден в дереве '{treeName}'");
         await NodeService.Delete(treeName, _nodeIds[key], CancellationToken.None);
-        _nodeIds.Remove(key);
     }
 
     [Then(@"узел ""(.*)"" не должен существовать в дереве ""(.*)""")]
@@ -106,6 +105,11 @@ internal class NodesSteps
         .Server
         .Services
         .GetRequiredService<INodeService>();
+
+    public ITreeService TreeService => _testContext
+        .Server
+        .Services
+        .GetRequiredService<ITreeService>();
 
     public INodeRepository NodeRepository => _testContext
         .Server

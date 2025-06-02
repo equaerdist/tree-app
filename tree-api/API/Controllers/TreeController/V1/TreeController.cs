@@ -24,7 +24,7 @@ public class TreeController : ControllerBase
     [ProducesResponseType(typeof(MNode), StatusCodes.Status200OK)]
     public async Task<ActionResult<MNode>> GetTree([FromQuery] string treeName, CancellationToken token)
     {
-        var result = await _treeService.GetOrCreateTreeAsync(treeName);
+        var result = await _treeService.GetOrCreateTreeAsync(treeName, token);
 
         return Ok(new MNode
         {

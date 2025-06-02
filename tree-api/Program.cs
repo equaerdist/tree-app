@@ -80,6 +80,7 @@ public class Program
         builder.Services.AddScoped<IExceptionHandler, ExceptionHandler>();
         builder.Services.AddScoped<MigrationsChecker>();
         builder.Services.AddScoped<INodeRepository, NodeRepository>();
+        builder.Services.AddScoped<ISearchRepository, SearchRepository>();
 
         return builder;
     }
