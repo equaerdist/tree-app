@@ -2,18 +2,17 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using tree.api.Tests.ClientGenerator;
 using tree_api.Configuration;
 using tree_api.Database;
 using tree_api.Tests.ClientGenerator.Utils;
+using tree.api.Tests.ClientGenerator;
 
 namespace tree_api.Tests.Setup;
 
 public class TestFixture
 {
-    private readonly TestServer _server;
-
     public readonly TreeAppClient TreeAppClient;
+    private readonly TestServer _server;
 
     public TestFixture()
     {
@@ -27,12 +26,38 @@ public class TestFixture
         CleanDb().GetAwaiter().GetResult();
     }
 
-    private async Task RunMigrations()
+    public static async Task CleanDb()
     {
-        await Program.Main(["--migrate"]);
-    }
+        var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production";
+        var configuration = new ConfigurationBuilder()
+            .SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile($"appsettings.{environment}.json", optional: false)
+            .AddEnvironmentVariables()
+            .Build();
 
-    public IServiceScope CreateScope() => _server.Services.CreateScope();
+        var dbCfg = configuration
+            .GetSection(nameof(DatabaseConfiguration))
+            .Get<DatabaseConfiguration>() ?? throw new ArgumentNullException(nameof(configuration));
+
+        var optionsBuilder = new DbContextOptionsBuilder<DbCtx>()
+            .UseNpgsql(dbCfg.ConnectionString);
+
+        await using var dbCtx = new DbCtx(optionsBuilder.Options);
+
+        var tableNames = await dbCtx.Database
+            .SqlQueryRaw<string>("""
+                                 SELECT tablename
+                                 FROM pg_tables
+                                 WHERE schemaname = 'public' AND tablename != '__EFMigrationsHistory';
+                                 """)
+            .ToListAsync();
+
+        foreach (var table in tableNames.Where(s => !s.Equals("__EFMigrationsHistory", StringComparison.OrdinalIgnoreCase)))
+        {
+            var sql = $"TRUNCATE TABLE \"{table}\" CASCADE;";
+            await dbCtx.Database.ExecuteSqlRawAsync(sql);
+        }
+    }
 
     public static TestServer CreateServer(Action<IServiceCollection>? configureServices = null)
     {
@@ -50,36 +75,11 @@ public class TestFixture
         return factory.Server;
     }
 
-    public static async Task CleanDb()
+    public IServiceScope CreateScope() => _server.Services.CreateScope();
+
+    private static async Task RunMigrations()
     {
-        var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production";
-        var configuration = new ConfigurationBuilder()
-            .SetBasePath(Directory.GetCurrentDirectory())
-            .AddJsonFile($"appsettings.{environment}.json", optional: false)
-            .AddEnvironmentVariables()
-            .Build();
-
-        var dbCfg = configuration
-            .GetSection(nameof(DatabaseConfiguration))
-            .Get<DatabaseConfiguration>() ?? throw new ArgumentNullException(nameof(DatabaseConfiguration));
-
-        var optionsBuilder = new DbContextOptionsBuilder<DbCtx>()
-            .UseNpgsql(dbCfg.ConnectionString);
-
-        await using var dbCtx = new DbCtx(optionsBuilder.Options);
-
-        var tableNames = await dbCtx.Database
-            .SqlQueryRaw<string>("""
-                                SELECT tablename
-                                FROM pg_tables
-                                WHERE schemaname = 'public' AND tablename != '__EFMigrationsHistory';
-                                """)
-            .ToListAsync();
-
-        foreach (var table in tableNames.Where(s => !s.Equals("__EFMigrationsHistory", StringComparison.OrdinalIgnoreCase)))
-        {
-            var sql = $"TRUNCATE TABLE \"{table}\" CASCADE;";
-            await dbCtx.Database.ExecuteSqlRawAsync(sql);
-        }
+        await Program.Main(["--migrate"]);
     }
 }
+

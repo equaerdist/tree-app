@@ -30,4 +30,3 @@ internal class SearchRepository : ISearchRepository
             result.Where(s => s.EntityType == Node).ToDictionary(s => s.Id, s => s.Name));
     }
 }
-

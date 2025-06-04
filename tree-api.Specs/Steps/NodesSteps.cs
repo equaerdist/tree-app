@@ -1,21 +1,17 @@
 using Microsoft.Extensions.DependencyInjection;
-
 using TechTalk.SpecFlow;
-
 using tree_api.Domain.Repositories;
 using tree_api.Domain.Services.NodeService;
 using tree_api.Domain.Services.TreeService;
 using tree_api.Specs.Contexts;
-
 using Xunit;
 
 namespace tree_api.Specs.Steps;
 
 [Binding]
-internal class NodesSteps
+internal sealed class NodesSteps
 {
     private readonly TestContext _testContext;
-
     private readonly Dictionary<string, long> _treeRoots = new();
     private readonly Dictionary<(string, string), long> _nodeIds = new();
 
@@ -23,6 +19,21 @@ internal class NodesSteps
     {
         _testContext = ctx;
     }
+
+    public INodeService NodeService => _testContext
+        .Server
+        .Services
+        .GetRequiredService<INodeService>();
+
+    public ITreeService TreeService => _testContext
+        .Server
+        .Services
+        .GetRequiredService<ITreeService>();
+
+    public INodeRepository NodeRepository => _testContext
+        .Server
+        .Services
+        .GetRequiredService<INodeRepository>();
 
     [Given(@"существует дерево с именем ""(.*)""")]
     public async Task GivenTreeExists(string treeName)
@@ -79,7 +90,6 @@ internal class NodesSteps
             var node = await NodeRepository.GetNodeAsync(treeName, nodeId, CancellationToken.None);
             Assert.Null(node);
         }
-        // Если узла в словаре и так нет, то всё корректно
     }
 
     [When(@"я переименовываю узел ""(.*)"" в ""(.*)"" в дереве ""(.*)""")]
@@ -102,19 +112,4 @@ internal class NodesSteps
         Assert.NotNull(node);
         Assert.Equal(nodeName, node.Name);
     }
-
-    public INodeService NodeService => _testContext
-        .Server
-        .Services
-        .GetRequiredService<INodeService>();
-
-    public ITreeService TreeService => _testContext
-        .Server
-        .Services
-        .GetRequiredService<ITreeService>();
-
-    public INodeRepository NodeRepository => _testContext
-        .Server
-        .Services
-        .GetRequiredService<INodeRepository>();
 }

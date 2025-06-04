@@ -43,4 +43,3 @@ internal sealed class ExceptionHandler : IExceptionHandler
         }
     }
 }
-

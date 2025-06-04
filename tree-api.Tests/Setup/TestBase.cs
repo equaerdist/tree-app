@@ -9,18 +9,20 @@ namespace tree_api.Tests.Setup;
 [Collection(FixtureCollection.FixtureCollectionName)]
 public class TestBase
 {
+    protected readonly Faker Faker;
     private readonly TestFixture _fixture;
-
-    protected TreeAppClient TreeAppClient => _fixture.TreeAppClient;
-    protected Faker Faker = new();
-    protected CancellationToken CancellationToken => new CancellationTokenSource(TimeSpan.FromSeconds(500)).Token;
 
     public TestBase(TestFixture fixture)
     {
         _fixture = fixture;
+        Faker = new();
     }
 
-    protected IServiceScope CreateScope() => _fixture.CreateScope();
+    protected static CancellationToken CancellationToken => new CancellationTokenSource(TimeSpan.FromSeconds(500)).Token;
 
-    protected TestServer CreateServer(Action<IServiceCollection>? configureServices = null) => TestFixture.CreateServer(configureServices);
+    protected TreeAppClient TreeAppClient => _fixture.TreeAppClient;
+
+    protected static TestServer CreateServer(Action<IServiceCollection>? configureServices = null) => TestFixture.CreateServer(configureServices);
+
+    protected IServiceScope CreateScope() => _fixture.CreateScope();
 }

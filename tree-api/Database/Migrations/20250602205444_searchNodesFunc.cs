@@ -2,16 +2,16 @@
 
 #nullable disable
 
-namespace tree_api.Database.Migrations;
-
-/// <inheritdoc />
-public partial class searchNodesFunc : Migration
+namespace tree_api.Database.Migrations
 {
     /// <inheritdoc />
-    protected override void Up(MigrationBuilder migrationBuilder)
+    public partial class searchNodesFunc : Migration
     {
-        migrationBuilder.Sql(
-            """
+        /// <inheritdoc />
+        protected override void Up(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.Sql(
+                """
             CREATE OR REPLACE FUNCTION search_trees_and_nodes(searchTerm text, limitCount integer)
             RETURNS TABLE (
                 "EntityType" text,
@@ -33,13 +33,14 @@ public partial class searchNodesFunc : Migration
             END;
             $$ LANGUAGE plpgsql;
             """);
-    }
+        }
 
-    /// <inheritdoc />
-    protected override void Down(MigrationBuilder migrationBuilder)
-    {
-        migrationBuilder.Sql(
-            "DROP FUNCTION IF EXISTS search_trees_and_nodes(text, integer);"
-        );
+        /// <inheritdoc />
+        protected override void Down(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.Sql(
+                "DROP FUNCTION IF EXISTS search_trees_and_nodes(text, integer);"
+            );
+        }
     }
 }
