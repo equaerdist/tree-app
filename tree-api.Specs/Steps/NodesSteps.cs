@@ -31,7 +31,6 @@ internal class NodesSteps
     [Given(@"существует узел с именем ""(.*)"" в дереве ""(.*)""")]
     public async Task GivenNodeExists(string nodeName, string treeName)
     {
-        // ������ ���� ��� ������
         var parentId = _treeRoots.TryGetValue(treeName, out var rootId) ? rootId : 0;
         var nodeId = await NodeService.Create(treeName, parentId, nodeName, CancellationToken.None);
         _nodeIds[(treeName, nodeName)] = nodeId;
