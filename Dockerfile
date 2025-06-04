@@ -12,8 +12,8 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["tree-api/tree-api.csproj", "tree-api/"]
-RUN dotnet restore "./tree-api/tree-api.csproj"
 COPY . .
+RUN dotnet restore "./tree-api/tree-api.csproj"
 WORKDIR "/src/tree-api"
 RUN dotnet build "./tree-api.csproj" -c $BUILD_CONFIGURATION -o /app/build
 

@@ -1,0 +1,29 @@
+name: dotnet format
+
+on:
+  push:
+    branches: [ '**' ]
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore dotnet tools
+        run: dotnet tool restore
+
+      - name: Run dotnet format (allow warnings, don't fail)
+        run: |
+          echo "Running dotnet format..."
+          if ! dotnet format --verify-no-changes --severity error; then
+            echo "::warning::dotnet format found issues, but job will continue."
+          else
+            echo "dotnet format passed with no issues."
+          fi

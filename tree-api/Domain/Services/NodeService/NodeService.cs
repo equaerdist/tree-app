@@ -1,28 +1,28 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Npgsql;
-using tree_api.Database;
 using tree_api.Database.Models;
 using tree_api.Domain.Exceptions;
+using tree_api.Domain.Repositories;
 
 namespace tree_api.Domain.Services.NodeService;
 
 internal class NodeService : INodeService
 {
-    private readonly DbCtx _ctx;
+    private readonly INodeRepository _repo;
 
-    public NodeService(DbCtx ctx)
+    public NodeService(INodeRepository repo)
     {
-        _ctx = ctx;
+        _repo = repo;
     }
 
     public async Task<long> Create(string treeName, long parentNodeId, string nodeName, CancellationToken token)
     {
-        var parent = await _ctx.Nodes.FirstOrDefaultAsync(n => n.Id == parentNodeId && n.Tree!.Name == treeName);
+        var parent = await _repo.GetNodeAsync(treeName, parentNodeId, token);
         Tree? treeParent = null;
 
         if (parent == null)
         {
-            treeParent = await _ctx.Trees.FirstOrDefaultAsync(n => n.Id == parentNodeId && n.Name == treeName);
+            treeParent = await _repo.GetTreeAsync(treeName, parentNodeId, token);
         }
 
         if (parent == null && treeParent == null)
@@ -37,11 +37,11 @@ internal class NodeService : INodeService
             ParentId = parent?.Id
         };
 
-        _ctx.Nodes.Add(newNode);
+        await _repo.AddNodeAsync(newNode, token);
 
         try
         {
-            await _ctx.SaveChangesAsync(token);
+            await _repo.SaveChangesAsync(token);
         }
         catch (DbUpdateException ex) when (ex.InnerException is PostgresException pgEx &&
                                     pgEx.SqlState == PostgresErrorCodes.UniqueViolation)
@@ -54,21 +54,20 @@ internal class NodeService : INodeService
 
     public async Task Delete(string treeName, long nodeId, CancellationToken token)
     {
-        var node = await _ctx.Nodes.FirstOrDefaultAsync(n => n.Id == nodeId && n.Tree!.Name == treeName);
+        var node = await _repo.GetNodeAsync(treeName, nodeId, token);
 
         if (node == null)
         {
             throw new SecureException("Node not found in the specified tree");
         }
 
-        _ctx.Nodes.Remove(node);
-        await _ctx.SaveChangesAsync();
+        await _repo.RemoveNodeAsync(node, token);
+        await _repo.SaveChangesAsync(token);
     }
 
     public async Task Rename(string treeName, long nodeId, string newNodeName, CancellationToken token)
     {
-        var node = await _ctx.Nodes
-            .FirstOrDefaultAsync(n => n.Id == nodeId && n.Tree!.Name == treeName);
+        var node = await _repo.GetNodeAsync(treeName, nodeId, token);
 
         if (node == null)
         {
@@ -79,7 +78,7 @@ internal class NodeService : INodeService
 
         try
         {
-            await _ctx.SaveChangesAsync();
+            await _repo.SaveChangesAsync(token);
         }
         catch (DbUpdateException ex) when (ex.InnerException is PostgresException pg && pg.SqlState == "23505")
         {
