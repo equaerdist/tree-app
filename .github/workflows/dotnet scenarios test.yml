@@ -1,4 +1,4 @@
-name: dotnet test
+name: dotnet scenarios test
 
 on:
   push:
@@ -39,5 +39,5 @@ jobs:
 
       - name: Test
         env:
-            ASPNETCORE_ENVIRONMENT: "Local"
-        run: dotnet test **/tree-api.Tests.csproj --no-build --configuration Release --logger trx
+          ASPNETCORE_ENVIRONMENT: "Local"
+        run: dotnet test **/tree_api.Specs.csproj --no-build --configuration Release --logger trx
