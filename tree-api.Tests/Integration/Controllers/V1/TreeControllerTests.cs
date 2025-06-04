@@ -13,7 +13,7 @@ public class TreeControllerTests : TestBase
     [Fact]
     public async Task GetOrCreateTree_WhenNotExists_ShouldCreate()
     {
-        //Act and Assert
+        // Act and Assert
         var action = async () => await TreeAppClient.GetAsync(Faker.Random.String2(10), CancellationToken);
         var node = (await action.Should().NotThrowAsync()).Subject;
     }
@@ -21,15 +21,15 @@ public class TreeControllerTests : TestBase
     [Fact]
     public async Task GetOrCreateTree_WhenAlreadyExist_ShouldGet()
     {
-        //Arrange
+        // Arrange
         var treeName = Faker.Random.String2(10);
         var createdNode = await TreeAppClient.GetAsync(treeName, CancellationToken);
 
-        //Act
+        // Act
         var action = async () => await TreeAppClient.GetAsync(treeName, CancellationToken);
         var node = (await action.Should().NotThrowAsync()).Subject;
 
-        //Assert
+        // Assert
         node.Should().BeEquivalentTo(createdNode);
     }
 }

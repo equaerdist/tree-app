@@ -3,14 +3,13 @@ using tree_api.Tests.ClientGenerator.Utils;
 
 namespace tree_api.Specs.Contexts;
 
-internal class TestContext
+internal sealed class TestContext : IDisposable
 {
     public TestServer Server;
 
-    public TestContext()
-    {
-        Server = SetupContext();
-    }
+    public TestContext() => Server = SetupContext();
+
+    public void Dispose() => Server.Dispose();
 
     private TestServer SetupContext()
     {
@@ -19,9 +18,9 @@ internal class TestContext
 #endif
 
         Server = new CustomWebApplicationFactory()
-            .WithWebHostBuilder(builder =>
+            .WithWebHostBuilder(_ =>
             {
-            })
+            }).Server;
 
         return Server;
     }

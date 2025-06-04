@@ -16,6 +16,12 @@ public class Common
         _container = container;
     }
 
+    [AfterScenario]
+    public void AfterScenario()
+    {
+        _container.Resolve<TestContext>().Dispose();
+    }
+
     [BeforeScenario]
     public void BeforeScenario()
     {
@@ -31,11 +37,5 @@ public class Common
             .CheckAndRunMigrations(default)
             .GetAwaiter()
             .GetResult();
-    }
-
-    [AfterScenario]
-    public void AfterScenario()
-    {
-        _container.Resolve<TestContext>().Server.Dispose();
     }
 }
