@@ -1,12 +1,15 @@
 using Microsoft.Extensions.DependencyInjection;
+
 using TechTalk.SpecFlow;
+
 using tree_api.Domain.Repositories;
 using tree_api.Domain.Services.NodeService;
 using tree_api.Domain.Services.TreeService;
 using tree_api.Specs.Contexts;
+
 using Xunit;
 
-namespace tree_api.Specs.StepDefinitions;
+namespace tree_api.Specs.Steps;
 
 [Binding]
 internal class NodesSteps

@@ -1,8 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using tree_api.Database;
-using tree_api.Database.Models;
 
-namespace tree_api.Domain.Repositories;
+using tree_api.Database.Models;
+using tree_api.Domain.Repositories;
+
+namespace tree_api.Database.Repositories;
 
 internal class SearchRepository : ISearchRepository
 {
