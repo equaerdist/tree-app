@@ -1,6 +1,44 @@
 @tree_api_HostAddress = http://localhost:5256
 
-GET {{tree_api_HostAddress}}/weatherforecast/
+### Get range of journals
+POST {{tree_api_HostAddress}}/api/v1/user/journal/getRange?skip=0&take=10
+Content-Type: application/json
+Accept: application/json
+
+{
+  "from": "2024-01-01T00:00:00Z",
+  "to": "2025-01-01T00:00:00Z",
+  "search": "example"
+}
+
+###
+
+### Get single journal by ID
+POST {{tree_api_HostAddress}}/api/v1/user/journal/getSingle?id=123
+Accept: application/json
+
+###
+
+### Get user tree
+POST {{tree_api_HostAddress}}/api/v1/user/tree/get?treeName=myTree
+Accept: application/json
+
+###
+
+### Create node in tree
+POST {{tree_api_HostAddress}}/api/v1/user/tree/node/create?treeName=myTree&parentNodeId=1&nodeName=newNode
+Accept: application/json
+
+###
+
+### Delete node in tree
+POST {{tree_api_HostAddress}}/api/v1/user/tree/node/delete?treeName=myTree&nodeId=5
+Accept: application/json
+
+###
+
+### Rename node in tree
+POST {{tree_api_HostAddress}}/api/v1/user/tree/node/rename?treeName=myTree&nodeId=5&newNodeName=renamedNode
 Accept: application/json
 
 ###
