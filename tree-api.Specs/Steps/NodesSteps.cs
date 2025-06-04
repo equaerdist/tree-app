@@ -21,55 +21,55 @@ internal class NodesSteps
         _testContext = ctx;
     }
 
-    [Given(@"существует дерево с именем ""(.*)""")]
-    public async Task ДопустимСуществуетДеревоСИменем(string treeName)
+    [Given(@"СЃСѓС‰РµСЃС‚РІСѓРµС‚ РґРµСЂРµРІРѕ СЃ РёРјРµРЅРµРј ""(.*)""")]
+    public async Task GivenTreeExists(string treeName)
     {
         var rootNodeId = await TreeService.GetOrCreateTreeAsync(treeName, CancellationToken.None);
         _treeRoots[treeName] = rootNodeId.Id;
     }
 
-    [Given(@"существует узел с именем ""(.*)"" в дереве ""(.*)""")]
-    public async Task ДопустимСуществуетУзелСИменемВДереве(string nodeName, string treeName)
+    [Given(@"СЃСѓС‰РµСЃС‚РІСѓРµС‚ СѓР·РµР» СЃ РёРјРµРЅРµРј ""(.*)"" РІ РґРµСЂРµРІРµ ""(.*)""")]
+    public async Task GivenNodeExists(string nodeName, string treeName)
     {
-        // Создаём узел под корнем
+        // пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
         var parentId = _treeRoots.TryGetValue(treeName, out var rootId) ? rootId : 0;
         var nodeId = await NodeService.Create(treeName, parentId, nodeName, CancellationToken.None);
         _nodeIds[(treeName, nodeName)] = nodeId;
     }
 
-    [When(@"я создаю узел с именем ""(.*)"" под ""(.*)"" в дереве ""(.*)""")]
-    public async Task ЕслиЯСоздаюУзелСИменемПодВДереве(string childNodeName, string parentNodeName, string treeName)
+    [When(@"СЏ СЃРѕР·РґР°СЋ СѓР·РµР» СЃ РёРјРµРЅРµРј ""(.*)"" РїРѕРґ ""(.*)"" РІ РґРµСЂРµРІРµ ""(.*)""")]
+    public async Task WhenICreateNodeUnderParent(string childNodeName, string parentNodeName, string treeName)
     {
         var parentKey = (treeName, parentNodeName);
-        Assert.True(_nodeIds.ContainsKey(parentKey), $"Родительский узел '{parentNodeName}' не найден в дереве '{treeName}'");
+        Assert.True(_nodeIds.ContainsKey(parentKey), $"Р РѕРґРёС‚РµР»СЊСЃРєРёР№ СѓР·РµР» '{parentNodeName}' РЅРµ РЅР°Р№РґРµРЅ РІ РґРµСЂРµРІРµ '{treeName}'");
         var parentId = _nodeIds[parentKey];
         var childId = await NodeService.Create(treeName, parentId, childNodeName, CancellationToken.None);
         _nodeIds[(treeName, childNodeName)] = childId;
     }
 
-    [Then(@"узел ""(.*)"" должен существовать под ""(.*)"" в дереве ""(.*)""")]
-    public async Task ТоУзелДолженСуществоватьПодВДереве(string childNodeName, string parentNodeName, string treeName)
+    [Then(@"СѓР·РµР» ""(.*)"" РґРѕР»Р¶РµРЅ СЃСѓС‰РµСЃС‚РІРѕРІР°С‚СЊ РїРѕРґ ""(.*)"" РІ РґРµСЂРµРІРµ ""(.*)""")]
+    public async Task ThenNodeShouldExistUnderParent(string childNodeName, string parentNodeName, string treeName)
     {
         var childKey = (treeName, childNodeName);
         var parentKey = (treeName, parentNodeName);
-        Assert.True(_nodeIds.ContainsKey(childKey), $"Узел '{childNodeName}' не найден в дереве '{treeName}'");
-        Assert.True(_nodeIds.ContainsKey(parentKey), $"Родительский узел '{parentNodeName}' не найден в дереве '{treeName}'");
+        Assert.True(_nodeIds.ContainsKey(childKey), $"РЈР·РµР» '{childNodeName}' РЅРµ РЅР°Р№РґРµРЅ РІ РґРµСЂРµРІРµ '{treeName}'");
+        Assert.True(_nodeIds.ContainsKey(parentKey), $"Р РѕРґРёС‚РµР»СЊСЃРєРёР№ СѓР·РµР» '{parentNodeName}' РЅРµ РЅР°Р№РґРµРЅ РІ РґРµСЂРµРІРµ '{treeName}'");
         var child = await NodeRepository.GetNodeAsync(treeName, _nodeIds[childKey], CancellationToken.None);
         Assert.NotNull(child);
         Assert.Equal(childNodeName, child.Name);
         Assert.Equal(_nodeIds[parentKey], child.ParentId);
     }
 
-    [When(@"я удаляю узел ""(.*)"" в дереве ""(.*)""")]
-    public async Task ЕслиЯУдаляюУзелВДереве(string nodeName, string treeName)
+    [When(@"СЏ СѓРґР°Р»СЏСЋ СѓР·РµР» ""(.*)"" РІ РґРµСЂРµРІРµ ""(.*)""")]
+    public async Task WhenIDeleteNode(string nodeName, string treeName)
     {
         var key = (treeName, nodeName);
-        Assert.True(_nodeIds.ContainsKey(key), $"Узел '{nodeName}' не найден в дереве '{treeName}'");
+        Assert.True(_nodeIds.ContainsKey(key), $"РЈР·РµР» '{nodeName}' РЅРµ РЅР°Р№РґРµРЅ РІ РґРµСЂРµРІРµ '{treeName}'");
         await NodeService.Delete(treeName, _nodeIds[key], CancellationToken.None);
     }
 
-    [Then(@"узел ""(.*)"" не должен существовать в дереве ""(.*)""")]
-    public async Task ТоУзелНеДолженСуществоватьВДереве(string nodeName, string treeName)
+    [Then(@"СѓР·РµР» ""(.*)"" РЅРµ РґРѕР»Р¶РµРЅ СЃСѓС‰РµСЃС‚РІРѕРІР°С‚СЊ РІ РґРµСЂРµРІРµ ""(.*)""")]
+    public async Task ThenNodeShouldNotExist(string nodeName, string treeName)
     {
         var key = (treeName, nodeName);
         if (_nodeIds.TryGetValue(key, out var nodeId))
@@ -77,25 +77,25 @@ internal class NodesSteps
             var node = await NodeRepository.GetNodeAsync(treeName, nodeId, CancellationToken.None);
             Assert.Null(node);
         }
-        // Если нет в словаре — значит уже удалён, что тоже корректно
+        // Р•СЃР»Рё СѓР·Р»Р° РІ СЃР»РѕРІР°СЂРµ Рё С‚Р°Рє РЅРµС‚, С‚Рѕ РІСЃС‘ РєРѕСЂСЂРµРєС‚РЅРѕ
     }
 
-    [When(@"я переименовываю узел ""(.*)"" в ""(.*)"" в дереве ""(.*)""")]
-    public async Task ЕслиЯПереименовываюУзелВВДереве(string oldName, string newName, string treeName)
+    [When(@"СЏ РїРµСЂРµРёРјРµРЅРѕРІС‹РІР°СЋ СѓР·РµР» ""(.*)"" РІ ""(.*)"" РІ РґРµСЂРµРІРµ ""(.*)""")]
+    public async Task WhenIRenameNode(string oldName, string newName, string treeName)
     {
         var key = (treeName, oldName);
-        Assert.True(_nodeIds.ContainsKey(key), $"Узел '{oldName}' не найден в дереве '{treeName}'");
+        Assert.True(_nodeIds.ContainsKey(key), $"РЈР·РµР» '{oldName}' РЅРµ РЅР°Р№РґРµРЅ РІ РґРµСЂРµРІРµ '{treeName}'");
         var nodeId = _nodeIds[key];
         await NodeService.Rename(treeName, nodeId, newName, CancellationToken.None);
         _nodeIds.Remove(key);
         _nodeIds[(treeName, newName)] = nodeId;
     }
 
-    [Then(@"узел ""(.*)"" должен существовать в дереве ""(.*)""")]
-    public async Task ТоУзелДолженСуществоватьВДереве(string nodeName, string treeName)
+    [Then(@"СѓР·РµР» ""(.*)"" РґРѕР»Р¶РµРЅ СЃСѓС‰РµСЃС‚РІРѕРІР°С‚СЊ РІ РґРµСЂРµРІРµ ""(.*)""")]
+    public async Task ThenNodeShouldExist(string nodeName, string treeName)
     {
         var key = (treeName, nodeName);
-        Assert.True(_nodeIds.ContainsKey(key), $"Узел '{nodeName}' не найден в дереве '{treeName}'");
+        Assert.True(_nodeIds.ContainsKey(key), $"РЈР·РµР» '{nodeName}' РЅРµ РЅР°Р№РґРµРЅ РІ РґРµСЂРµРІРµ '{treeName}'");
         var node = await NodeRepository.GetNodeAsync(treeName, _nodeIds[key], CancellationToken.None);
         Assert.NotNull(node);
         Assert.Equal(nodeName, node.Name);

@@ -5,7 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Package Include="SpecFlow" />
     <PackageReference Include="SpecFlow.xUnit" />
     <PackageReference Include="SpecFlow.Tools.MsBuild.Generation" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
