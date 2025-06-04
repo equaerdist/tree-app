@@ -9,6 +9,7 @@ internal class DbCtx : DbContext
 
     public DbSet<Tree> Trees => Set<Tree>();
     public DbSet<Node> Nodes => Set<Node>();
+    public DbSet<SearchUnit> SearchUnits => Set<SearchUnit>();
     public DbSet<LogEntry> LogJournal => Set<LogEntry>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

@@ -5,6 +5,8 @@ using System.Reflection;
 using tree_api.API.Middlewares;
 using tree_api.Configuration;
 using tree_api.Database;
+using tree_api.Database.Repositories;
+using tree_api.Domain.Repositories;
 using tree_api.Domain.Services.ExceptionHandler;
 using tree_api.Domain.Services.JournalService;
 using tree_api.Domain.Services.NodeService;
@@ -77,6 +79,8 @@ public class Program
         builder.Services.AddScoped<INodeService, NodeService>();
         builder.Services.AddScoped<IExceptionHandler, ExceptionHandler>();
         builder.Services.AddScoped<MigrationsChecker>();
+        builder.Services.AddScoped<INodeRepository, NodeRepository>();
+        builder.Services.AddScoped<ISearchRepository, SearchRepository>();
 
         return builder;
     }
